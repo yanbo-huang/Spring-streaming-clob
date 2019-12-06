@@ -19,13 +19,10 @@ import java.io.StringReader
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-@Transactional
+//@Transactional
 class AuthorRepoTest {
     @Autowired
     private lateinit var authorRepo: AuthorRepo
-
-    @Autowired
-    private lateinit var bookRepo: BookRepo
 
     @Test
     fun `test save and write data to repository`() {
@@ -37,19 +34,12 @@ class AuthorRepoTest {
         authorRepo.save(author2)
         authorRepo.save(author3)
 
-        val fetchedAuthor1 = authorRepo.findByIdOrNull(1)!!
-
         val contentFile = ResourceUtils.getFile("classpath:content.csv")
 
         val contentReader = contentFile.inputStream().reader()
 
        val author4 =  Author(name = "author4", books = listOf(Book(bookDetails = getClob(contentReader, contentFile.length()))))
         authorRepo.save(author4)
-
-
-        val fetchedAuthor = authorRepo.findByName("author4")
-
-        val returnedAuthor = fetchedAuthor.dropBooks()
 
         authorRepo.deleteById(7)
 
